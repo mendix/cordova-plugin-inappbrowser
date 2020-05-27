@@ -71,6 +71,7 @@
 
 - (void)close;
 - (void)navigateTo:(NSURL*)url;
+- (void)navigateToWithCookies:(NSURL*)url cookies:(NSArray*)cookies;
 - (void)showLocationBar:(BOOL)show;
 - (void)showToolBar:(BOOL)show : (NSString *) toolbarPosition;
 - (void)setCloseButtonTitle:(NSString*)title : (NSString*) colorString : (int) buttonIndex;

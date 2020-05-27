@@ -256,7 +256,7 @@ static CDVWKInAppBrowser* instance = nil;
     }
     _waitForBeforeload = ![_beforeload isEqualToString:@""];
     
-    [self.inAppBrowserViewController navigateTo:url];
+    [self.inAppBrowserViewController navigateToWithCookies:url cookies:[[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[NSURL URLWithString:[NSString stringWithFormat: @"%@://%@", url.scheme, url.host]]]];
     if (!browserOptions.hidden) {
         [self show:nil withNoAnimate:browserOptions.hidden];
     }
@@ -1083,10 +1083,17 @@ BOOL isExiting = FALSE;
 
 - (void)navigateTo:(NSURL*)url
 {
-    if ([url.scheme isEqualToString:@"file"]) {
+    [self navigateToWithCookies:url cookies: nil];
+}
+
+- (void)navigateToWithCookies:(NSURL*)url cookies:(NSArray*)cookies {
+   if ([url.scheme isEqualToString:@"file"]) {
         [self.webView loadFileURL:url allowingReadAccessToURL:url];
     } else {
-        NSURLRequest* request = [NSURLRequest requestWithURL:url];
+        NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
+        if (cookies != nil) {
+            [request setAllHTTPHeaderFields:[NSHTTPCookie requestHeaderFieldsWithCookies:cookies]];
+        }
         [self.webView loadRequest:request];
     }
 }
